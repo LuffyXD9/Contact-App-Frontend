@@ -13,6 +13,14 @@ const AddContact = ({ show, handleClose, onSaveContact}) => {
     emails: [''],
   };
 
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = String(currentDate.getFullYear());
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [contactData, setContactData] = React.useState(initialValues);
 
   const handleAddPhoneNumber = () => {
@@ -43,8 +51,26 @@ const AddContact = ({ show, handleClose, onSaveContact}) => {
     }));
   };
 
+  const validateNumber = (number) => {
+    return /^\d{10}$/.test(number);
+  }
+
+  const validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
   const handleSubmit = async(e) => {
     e.preventDefault();
+
+    if (!contactData.mobileNumbers.every(validateNumber)) {
+      toast.error('Invalid mobile number format');
+      return;
+    }
+
+    if (!contactData.emails.every(validateEmail)) {
+      toast.error('Invalid email address format');
+      return;
+    }
     const data = {
       ...contactData,
     };
@@ -104,6 +130,7 @@ const AddContact = ({ show, handleClose, onSaveContact}) => {
                 placeholder='Date of Birth'
                 value={contactData.DOB}
                 required
+                max={getCurrentDate()}
                 onChange={e => setContactData({...contactData, DOB : e.target.value})}
               />
             </Form.Group>

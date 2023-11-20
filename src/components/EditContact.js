@@ -9,6 +9,14 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
     setEditedContact(contact);
   },[contact]);
 
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = String(currentDate.getFullYear());
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleAddPhoneNumber = () => {
     setEditedContact({
       ...editedContact,
@@ -41,8 +49,26 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
     });
   };
 
+  const validateNumber = (number) => {
+    return /^\d{10}$/.test(number);
+  }
+
+  const validateEmail = (email) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
   const handleEdit = async(e) => {
     e.preventDefault();
+
+    if (!editedContact.mobileNumbers.every(validateNumber)) {
+      toast.error('Invalid mobile number format');
+      return;
+    }
+
+    if (!editedContact.emails.every(validateEmail)) {
+      toast.error('Invalid email address format');
+      return;
+    }
 
     const data = {
       ...editedContact,
@@ -103,6 +129,7 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
             <Form.Control
               type="date"
               placeholder="Date of Birth"
+              max={getCurrentDate()}
               value={editedContact.DOB ? editedContact.DOB.slice(0, 10) : ''}
               onChange={(e) =>
                 setEditedContact({ ...editedContact, DOB: e.target.value })
