@@ -1,100 +1,100 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react'
 import './addstyle.css'
-// import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
-  const [editedContact, setEditedContact] = useState({...contact});
-
-  useEffect(()=>{
-    setEditedContact(contact);
-  },[contact]);
-
-  const getCurrentDate = () => {
-    const currentDate = new Date();
-    const year = String(currentDate.getFullYear());
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  const handleAddPhoneNumber = () => {
-    setEditedContact({
-      ...editedContact,
-      mobileNumbers: [...editedContact.mobileNumbers, ''],
-    });
-  };
-
-  const handleRemovePhoneNumber = (index) => {
-    const filteredPhoneNumbers = editedContact.mobileNumbers.filter(
-      (_, i) => i !== index
-    );
-    setEditedContact({
-      ...editedContact,
-      mobileNumbers: filteredPhoneNumbers,
-    });
-  };
-
-  const handleAddEmails = () => {
-    setEditedContact({
-      ...editedContact,
-      emails: [...editedContact.emails, ''],
-    });
-  };
-
-  const handleRemoveEmails = (index) => {
-    const filteredEmails = editedContact.emails.filter((_, i) => i !== index);
-    setEditedContact({
-      ...editedContact,
-      emails: filteredEmails,
-    });
-  };
-
-  const validateNumber = (number) => {
-    return /^\d{10}$/.test(number);
-  }
-
-  const validateEmail = (email) => {
-    return /\S+@\S+\.\S+/.test(email);
-  };
-
-  const handleEdit = async(e) => {
-    e.preventDefault();
-
-    if (!editedContact.mobileNumbers.every(validateNumber)) {
-      toast.error('Invalid mobile number format');
-      return;
-    }
-
-    if (!editedContact.emails.every(validateEmail)) {
-      toast.error('Invalid email address format');
-      return;
-    }
-
-    const data = {
-      ...editedContact,
-    };
-    await fetch('/allcontacts/' + data._id,{
-      method : 'PATCH',
-      headers : {"Content-Type" : "application/json"},
-      body : JSON.stringify(data)
-     }).then((response)=> console.log(response)).catch((err)=>console.log(err));
-
-    onSaveContact();
-    toast.success('Contact edited successfully!');
-    closeEdit();
-  };
-
+const AddC = ({show, handleClose, onSaveContact}) => {
+    const initialValues = {
+        firstName: '',
+        lastName: '',
+        nickName: '',
+        DOB: '',
+        mobileNumbers: [''],
+        emails: [''],
+      };
+    
+      const getCurrentDate = () => {
+        const currentDate = new Date();
+        const year = String(currentDate.getFullYear());
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
+    
+      const [contactData, setContactData] = React.useState(initialValues);
+    
+      const handleAddPhoneNumber = () => {
+        setContactData((prevData) => ({
+          ...prevData,
+          mobileNumbers: [...prevData.mobileNumbers, ''],
+        }));
+      };
+    
+      const handleRemovePhoneNumber = (index) => {
+        setContactData((prevData) => ({
+          ...prevData,
+          mobileNumbers: prevData.mobileNumbers.filter((_, i) => i !== index),
+        }));
+      };
+    
+      const handleAddEmails = () => {
+        setContactData((prevData) => ({
+          ...prevData,
+          emails: [...prevData.emails, ''],
+        }));
+      };
+    
+      const handleRemoveEmails = (index) => {
+        setContactData((prevData) => ({
+          ...prevData,
+          emails: prevData.emails.filter((_, i) => i !== index),
+        }));
+      };
+    
+      const validateNumber = (number) => {
+        return /^\d{10}$/.test(number);
+      }
+    
+      const validateEmail = (email) => {
+        return /\S+@\S+\.\S+/.test(email);
+      };
+    
+      const handleSubmit = async(e) => {
+        e.preventDefault();
+    
+        if (!contactData.mobileNumbers.every(validateNumber)) {
+          toast.error('Invalid mobile number format');
+          return;
+        }
+    
+        if (!contactData.emails.every(validateEmail)) {
+          toast.error('Invalid email address format');
+          return;
+        }
+        const data = {
+          ...contactData,
+        };
+        await fetch('/allcontacts',{
+          method : 'POST',
+          headers : {"Content-Type" : "application/json"},
+          body : JSON.stringify(data)
+         }).then((response)=> console.log(response)).catch((err)=>console.log(err));
+        toast.success('Contact added successfully!');
+        console.log(data);
+        onSaveContact();
+        setContactData(initialValues);
+        handleClose();
+      };
   return (
     <>
     <div className='modal-wrapper'></div>
-    <div className={edit ? 'modal show' : 'modal hide'}>
+    <div className={show ? 'modal show' : 'modal hide'}>
       <div className="modal-container">
-    <form onSubmit={handleEdit} className='form'>
+    <form onSubmit={handleSubmit} className='form'>
       <div className='title'>
-        Welcome <button className="closebtn" onClick={closeEdit}><i class="fa-solid fa-xmark"></i></button>
+        Welcome <button className="closebtn" onClick={handleClose}><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div className='subtitle'>Edit Contact Details</div>
+      <div className='subtitle'>Add Contact Details</div>
   
       {/* First Name */}
       <div className='input-container ic1'>
@@ -103,9 +103,9 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           className='input'
           type='text'
           placeholder=' '
-          value={editedContact.firstName}
+          value={contactData.firstName}
           required
-          onChange={(e) => setEditedContact({ ...editedContact, firstName: e.target.value })}
+          onChange={(e) => setContactData({ ...contactData, firstName: e.target.value })}
         />
         <div className='cut'></div>
         <label htmlFor='firstname' className='placeholder'>
@@ -120,8 +120,8 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           className='input'
           type='text'
           placeholder=' '
-          value={editedContact.lastName}
-          onChange={(e) => setEditedContact({ ...editedContact, lastName: e.target.value })}
+          value={contactData.lastName}
+          onChange={(e) => setContactData({ ...contactData, lastName: e.target.value })}
         />
         <div className='cut'></div>
         <label htmlFor='lastname' className='placeholder'>
@@ -136,9 +136,9 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           className='input'
           type='text'
           placeholder=' '
-          value={editedContact.nickName}
+          value={contactData.nickName}
           required
-          onChange={(e) => setEditedContact({ ...editedContact, nickName: e.target.value })}
+          onChange={(e) => setContactData({ ...contactData, nickName: e.target.value })}
         />
         <div className='cut'></div>
         <label htmlFor='nickname' className='placeholder'>
@@ -153,10 +153,10 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           className='input'
           type='date'
           placeholder=' '
-          value={editedContact.DOB ? editedContact.DOB.slice(0, 10) : ''}
+          value={contactData.DOB}
           required
           max={getCurrentDate()}
-          onChange={(e) => setEditedContact({ ...editedContact, DOB: e.target.value })}
+          onChange={(e) => setContactData({ ...contactData, DOB: e.target.value })}
         />
         <div className='cut'></div>
         <label htmlFor='DOB' className='placeholder'>
@@ -192,7 +192,7 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
 
           {/* numbers */}
       
-      {editedContact.mobileNumbers.map((number, index) => (
+      {contactData.mobileNumbers.map((number, index) => (
           <div className='input-container ic2'>
             <div className="same-row">            
             <input
@@ -202,9 +202,9 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           value={number}
           required
           onChange={(e) => {
-            const updatedNumbers = [...editedContact.mobileNumbers];
+            const updatedNumbers = [...contactData.mobileNumbers];
             updatedNumbers[index] = e.target.value;
-            setEditedContact({ ...editedContact, mobileNumbers: updatedNumbers });
+            setContactData({ ...contactData, mobileNumbers: updatedNumbers });
           }}
         />
         <div className='cut'></div>
@@ -226,7 +226,7 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
         <i class="fa-solid fa-plus"></i>
       </button>
 
-  {editedContact.emails.map((email, index) => (
+  {contactData.emails.map((email, index) => (
     <div className='input-container ic2'>
     <div className="same-row">  
     <input
@@ -236,10 +236,10 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
           value={email}
           required
           onChange={(e) => {
-            const updatedEmails = [...editedContact.emails];
+            const updatedEmails = [...contactData.emails];
             updatedEmails[index] = e.target.value;
-            setEditedContact({
-              ...editedContact,
+            setContactData({
+              ...contactData,
               emails: updatedEmails
             });
           }}
@@ -268,7 +268,7 @@ const EditContact = ({ contact ,edit,closeEdit,onSaveContact}) => {
     </div>
   </div>
   </>
-  );
-};
+  )
+}
 
-export default EditContact;
+export default AddC

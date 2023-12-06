@@ -1,11 +1,15 @@
 import React, { useEffect, useState }from 'react';
 import { toast} from 'react-toastify';
-import { Button, ListGroup, Row, Col, Spinner } from 'react-bootstrap';
-import AddContact from './AddContact';
-import Nav from './Nav';
-import ViewContact from './ViewContact';
+import { Spinner } from 'react-bootstrap';
+// import AddContact from './AddContact';
+import AddC from './AddC';
+// import Nav from './Nav';
+// import ViewContact from './ViewContact';
+import ViewC from './ViewC';
 import EditContact from './EditContact';
 import 'react-toastify/dist/ReactToastify.css';
+import './content.css'
+import './addstyle.css'
 
 const Content = () => {
   const [showModal, setShowModal] = React.useState(false);
@@ -102,24 +106,27 @@ const Content = () => {
 
   return (
     <>
-      <Nav />
+      {/* <Nav /> */}
       <div className="container">
         <div className="row">
-          <div className="col-md-12 my-5 text-end">
+          <div className="search-btn">
             <input
-              className="docSearch docSearch-btn mb-5 me-3 form-control"
+              className="input-search"
               type="search"
               placeholder="Search"
               aria-label="Search"
               onChange={(e) => setSearchText(e.target.value)}
             />
             <button
-              className="btn btn-primary rounded-pill"
+              className="add-btn"
               onClick={handleShowModal}
             >
-              Add Contact
+             <i class="fa-solid fa-user-plus"></i>Add Contact
             </button>
-            <AddContact show={showModal} handleClose={handleCloseModal} onSaveContact={handleAddEditContact}/>
+            {showModal && <AddC show={showModal} handleClose={handleCloseModal} onSaveContact={handleAddEditContact}/> }
+            
+            {/* <AddContact show={showModal} handleClose={handleCloseModal} onSaveContact={handleAddEditContact}/> */}
+            
           </div>
           {loading ? (
             <div className="d-flex justify-content-center align-items-center">
@@ -128,41 +135,44 @@ const Content = () => {
             </Spinner>
           </div>
           ) : (
-          <Row>
-            <Col md={{ span: 5, offset: 4 }}>
-              <ListGroup>
+          <div className='content-row'>
                 {filteredContacts.map((contact, index) => (
-                  <div key={index}>
-                    <ListGroup.Item
-                      variant="dark"
-                      className="d-flex justify-content-between align-items-center rounded"
-                      style={{ backgroundColor: "#f5f5f5" }}
-                    >
-                      <div>
+                  // <div key={index}>
+                    <div className='items-item'>
+                      <div className='name'>
                         <strong>{contact.nickName}</strong>
-                        <br />
-                        DOB: {contact.DOB.slice(0, 10)}
+                        {contact.DOB.slice(0, 10)}
                       </div>
-                      <div>
-                        <Button
-                          variant="info"
-                          className="rounded-circle"
+                      <div className='btns'>
+                        <button
+                          className="ved-btn bl h"
                           onClick={() => handleViewModal(contact)}
                         >
-                          <i className="far fa-eye"></i> View
-                        </Button>
-                        <ViewContact
-                          contact={specificContact}
-                          view={viewModal}
-                          closeView={handleViewClose}
-                        />
-                        <Button
-                          variant="warning"
-                          className="rounded-circle"
+                          <i className="far fa-eye"></i>
+                        </button>
+                        
+                        <button
+                          className="ved-btn grn h"
                           onClick={()=>handleEditModal(contact)}
                         >
-                          <i className="far fa-edit"></i> Edit
-                        </Button>
+                          <i className="far fa-edit"></i>
+                        </button>
+                        
+                        <button
+                          className="ved-btn red h"
+                          onClick={() => {console.log(contact._id)
+                            deleteContact(contact._id)}}
+                        >
+                          <i className="far fa-trash-alt"></i>
+                        </button>
+                      </div>
+                    {/* </div> */}
+                  </div>
+                ))}
+              </div>
+          )}
+          {/* <ViewContact contact={specificContact} view={viewModal} closeView={handleViewClose} /> */}
+          {viewModal && <ViewC contact={specificContact} view={viewModal} closeView={handleViewClose} />}
                         {editModal && (
                         <EditContact
                           contact={editContact}
@@ -170,22 +180,6 @@ const Content = () => {
                           closeEdit={() => setEditModal(false)}
                           onSaveContact={handleAddEditContact}
                         />)}
-                        <Button
-                          variant="danger"
-                          className="rounded-circle"
-                          onClick={() => {console.log(contact._id)
-                            deleteContact(contact._id)}}
-                        >
-                          <i className="far fa-trash-alt"></i> Delete
-                        </Button>
-                      </div>
-                    </ListGroup.Item>
-                  </div>
-                ))}
-              </ListGroup>
-            </Col>
-          </Row>
-          )}
         </div>
       </div>
     </>
