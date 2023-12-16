@@ -1,7 +1,6 @@
 import React from 'react'
 import './view.css'
-// import { Button, Modal, Form } from 'react-bootstrap';
-
+import img from '.././dr5qp.jpg'
 const ViewC = ({contact, view, closeView}) => {
 
   if (!contact) {
@@ -15,25 +14,17 @@ const ViewC = ({contact, view, closeView}) => {
         <div className="modal-container">
     <div class="card-container">
 	<button class="pro" onClick={closeView}><i className="fa-solid fa-arrow-left"/></button>
-	<img class="round" src="https://randomuser.me/api/portraits/women/5.jpg" alt="user" />
+	<img class="round" src={img} alt="user" />
 	<h3>{contact.firstName + ' ' + contact.lastName}</h3>
 	<h6>{contact.nickName}</h6>
 	<p>{contact.DOB ? contact.DOB.slice(0, 10) : ''}</p>
-	{/* <div class="buttons">
-		<button class="primary">
-			Message
-		</button>
-		<button class="primary ghost">
-			Following
-		</button>
-	</div> */}
 	<div class="skills">
 		<h6>Numbers</h6>
 		{contact.mobileNumbers.map((number, index) => (
           <div className='input-container ic2'>
             <div className="same-row">            
             <input
-          className='input'
+          className='input-d'
           type='number'
           placeholder=' '
           value={number}
@@ -43,13 +34,14 @@ const ViewC = ({contact, view, closeView}) => {
           </div>
         ))}
 	</div>
+  <div className="skill">
     <div class="skills-e">
 		<h6>Emails</h6>
 		{contact.emails.map((email, index) => (
     <div className='input-container ic2'>
     <div className="same-row">  
     <input
-          className='input'
+          className='input-d'
           type='text'
           placeholder=' '
           value={email}
@@ -59,6 +51,7 @@ const ViewC = ({contact, view, closeView}) => {
     </div>
        ))}
 	</div>
+  </div>
     </div>
     </div>
     </div>

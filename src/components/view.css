@@ -13,10 +13,10 @@ p {
 }
 
 .card-container {
-	background-color: #231E39;
+	background-color: #ffffff;
 	border-radius: 5px;
 	box-shadow: 0px 10px 20px -10px rgba(0,0,0,0.75);
-	color: #B3B8CD;
+	/* color: #B3B8CD; */
 	padding-top: 30px;
 	position: relative;
 	width: 350px;
@@ -25,25 +25,28 @@ p {
 }
 
 .card-container .pro {
-	color: #231E39;
-	background-color: #FEBB0B;
-	border-radius: 3px;
-	font-size: 14px;
-	font-weight: bold;
-	padding: 3px 7px;
+	/* color: #231E39; */
+	background-color: #f90;
+	border-radius: 2px;
+	/* font-size: 14px; */
+	/* font-weight: bold; */
+	padding: 5px 10px;
 	position: absolute;
 	top: 30px;
 	left: 30px;
+	border: none;
 	cursor: pointer;
 }
-
+.card-container .pro:hover {
+	background-color: rgb(220, 134, 6);;
+}
 .card-container .round {
-	border: 1px solid #03BFCB;
+	border: 1px solid black;
 	border-radius: 50%;
 	padding: 7px;
 }
 
-button.primary {
+/* button.primary {
 	background-color: #03BFCB;
 	border: 1px solid #03BFCB;
 	border-radius: 3px;
@@ -56,19 +59,19 @@ button.primary {
 button.primary.ghost {
 	background-color: transparent;
 	color: #02899C;
-}
+} */
 
 .skills {
-	background-color: #1F1A36;
+	background-color: #fafafa;
 	text-align: left;
 	padding: 10px;
 	margin-top: 15px;
 }
 .skills-e {
-	background-color: #1F1A36;
+	background-color: #fafafa;
 	text-align: left;
 	padding: 10px;
-	margin-top: 15px;
+	/* margin-top: 15px; */
 }
 .skills .ic2{
     margin-top: 10px;
@@ -76,4 +79,13 @@ button.primary.ghost {
 
 .skills-e .ic2{
     margin-top: 10px;
+}
+
+.input-d{
+	width: 100%;
+	padding: 5px 8px;
+	outline: 0;
+	border: 1px solid black;
+	font-size: 1.2rem;
+	background-color: #fff;
 }

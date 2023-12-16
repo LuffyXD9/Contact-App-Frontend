@@ -1,20 +1,21 @@
 import React, { useEffect, useState }from 'react';
 import { toast} from 'react-toastify';
 import { Spinner } from 'react-bootstrap';
-// import AddContact from './AddContact';
 import AddC from './AddC';
-// import Nav from './Nav';
-// import ViewContact from './ViewContact';
 import ViewC from './ViewC';
 import EditContact from './EditContact';
+import ConfirmModal from './ConfirmModal';
 import 'react-toastify/dist/ReactToastify.css';
 import './content.css'
 import './addstyle.css'
+import './deletion.css'
 
 const Content = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [viewModal, setViewModal] = React.useState(false);
   const [editModal, setEditModal] = React.useState(false);
+  const [deleteModal, setDeleteModal] = React.useState(false);
+  const [deleteContactId, setDeleteContactId] = useState();
   const [searchText, setSearchText] = React.useState('');
   const [specificContact, setSpecificContact] = React.useState();
   const [editContact, setEditContact] = useState();
@@ -52,27 +53,42 @@ const Content = () => {
     setLoading(false);
   },[contactData,searchText])
 
-  const deleteContact = async(id) => {
-    // console.log(id);
-    await fetch('/allcontacts/' + id,{
-      method : 'DELETE'
-    }).then((response)=>{
-      if(!response.ok){
-        throw console.error('something went wrong');
-      }
+  
+  const deleteContact = async (id) => {
+    setDeleteContactId(id);
+    setDeleteModal(true);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteModal(false);
+    setDeleteContactId(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await fetch('/allcontacts/' + deleteContactId, {
+        method: 'DELETE'
+      });
+
       setContactData((prevContactData) =>
-      prevContactData.filter((contact) => contact._id !== id)
-    );
+        prevContactData.filter((contact) => contact._id !== deleteContactId)
+      );
+
       toast.success('Contact deleted successfully');
-    })
+    } catch (error) {
+      console.error('Error deleting contact:', error);
+      toast.error('Failed to delete contact');
+    } finally {
+      setDeleteModal(false);
+      setDeleteContactId(null);
+    }
   };
 
 
   const handleShowModal = () => {
     setShowModal(true);
   };
-
-
+  
   const handleViewModal = (contact) => {
     setSpecificContact(contact);
     setViewModal(true);
@@ -106,7 +122,6 @@ const Content = () => {
 
   return (
     <>
-      {/* <Nav /> */}
       <div className="container">
         <div className="row">
           <div className="search-btn">
@@ -121,13 +136,12 @@ const Content = () => {
               className="add-btn"
               onClick={handleShowModal}
             >
-             <i class="fa-solid fa-user-plus"></i>Add Contact
+             <i className="fa-solid fa-user-plus"></i>Add Contact
             </button>
             {showModal && <AddC show={showModal} handleClose={handleCloseModal} onSaveContact={handleAddEditContact}/> }
-            
-            {/* <AddContact show={showModal} handleClose={handleCloseModal} onSaveContact={handleAddEditContact}/> */}
-            
+  
           </div>
+         
           {loading ? (
             <div className="d-flex justify-content-center align-items-center">
             <Spinner animation="border" role="status">
@@ -136,11 +150,16 @@ const Content = () => {
           </div>
           ) : (
           <div className='content-row'>
+            <div className="items-item-header">
+              <div className="header-name"><div>Nickname</div><div>DOB</div><div >Actions</div></div>
+              
+            </div>
                 {filteredContacts.map((contact, index) => (
-                  // <div key={index}>
                     <div className='items-item'>
                       <div className='name'>
-                        <strong>{contact.nickName}</strong>
+                        <div>
+                          {contact.nickName}
+                          </div>
                         {contact.DOB.slice(0, 10)}
                       </div>
                       <div className='btns'>
@@ -166,12 +185,11 @@ const Content = () => {
                           <i className="far fa-trash-alt"></i>
                         </button>
                       </div>
-                    {/* </div> */}
+                   
                   </div>
                 ))}
               </div>
           )}
-          {/* <ViewContact contact={specificContact} view={viewModal} closeView={handleViewClose} /> */}
           {viewModal && <ViewC contact={specificContact} view={viewModal} closeView={handleViewClose} />}
                         {editModal && (
                         <EditContact
@@ -180,6 +198,13 @@ const Content = () => {
                           closeEdit={() => setEditModal(false)}
                           onSaveContact={handleAddEditContact}
                         />)}
+                        {deleteModal && (
+        <ConfirmModal
+          show={deleteModal}
+          onCancel={handleCancelDelete}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
         </div>
       </div>
     </>

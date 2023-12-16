@@ -92,113 +92,85 @@ const AddC = ({show, handleClose, onSaveContact}) => {
       <div className="modal-container">
     <form onSubmit={handleSubmit} className='form'>
       <div className='title'>
-        Welcome <button className="closebtn" onClick={handleClose}><i class="fa-solid fa-xmark"></i></button>
+         Add Contact
       </div>
-      <div className='subtitle'>Add Contact Details</div>
-  
+    <div className="content-col">
       {/* First Name */}
-      <div className='input-container ic1'>
+      <div className='input-container-new'>
+      <label htmlFor='firstname' className='placeholder-new'>
+          First name - required
+        </label>
         <input
           id='firstname'
-          className='input'
+          className='input-new'
           type='text'
-          placeholder=' '
+          placeholder='First name'
           value={contactData.firstName}
           required
           onChange={(e) => setContactData({ ...contactData, firstName: e.target.value })}
-        />
-        <div className='cut'></div>
-        <label htmlFor='firstname' className='placeholder'>
-          First name
-        </label>
+        />  
       </div>
   
       {/* Last Name */}
-      <div className='input-container ic2'>
+      <div className='input-container-new'>
+      <label htmlFor='lastname' className='placeholder-new'>
+          Last name
+        </label>
         <input
           id='lastname'
-          className='input'
+          className='input-new'
           type='text'
-          placeholder=' '
+          placeholder='Last name'
           value={contactData.lastName}
           onChange={(e) => setContactData({ ...contactData, lastName: e.target.value })}
         />
-        <div className='cut'></div>
-        <label htmlFor='lastname' className='placeholder'>
-          Last name
-        </label>
       </div>
   
       {/* Nick Name */}
-      <div className='input-container ic2'>
+      <div className='input-container-new'>
+      <label htmlFor='nickname' className='placeholder-new'>
+          Nick name - required
+        </label>
         <input
           id='nickname'
-          className='input'
+          className='input-new'
           type='text'
-          placeholder=' '
+          placeholder='Nick name'
           value={contactData.nickName}
           required
           onChange={(e) => setContactData({ ...contactData, nickName: e.target.value })}
         />
-        <div className='cut'></div>
-        <label htmlFor='nickname' className='placeholder'>
-          Nick name
-        </label>
+        
       </div>
   
       {/* DOB */}
-      <div className='input-container ic2'>
+      <div className='input-container-new'>
+      <label htmlFor='DOB' className='placeholder-new'>
+          DOB - required
+        </label>
         <input
           id='DOB'
-          className='input'
+          className='input-new'
           type='date'
-          placeholder=' '
+          placeholder='Date of Birth'
           value={contactData.DOB}
           required
           max={getCurrentDate()}
           onChange={(e) => setContactData({ ...contactData, DOB: e.target.value })}
         />
-        <div className='cut'></div>
-        <label htmlFor='DOB' className='placeholder'>
-          DOB
-        </label>
       </div>
-  
-      {/* phone number */}
-      {/* <div className='input-container ic2'>
-            <div className="same-row">
-            <input
-          className='input'
-          type='number'
-          placeholder=' '
-          value={contactData.mobileNumbers[0]}
-          required
-          onChange={(e) => {
-            const updatedNumbers = [...contactData.mobileNumbers];
-            updatedNumbers[0] = e.target.value;
-            setContactData({ ...contactData, mobileNumbers: updatedNumbers });
-          }}
-        />
-        <div className='cut'></div>
-        <label htmlFor='Number' className='placeholder'>
-          Number
-        </label>
-        <button type='button' className='add-button' onClick={handleAddPhoneNumber}>
-        +
-      </button>
-        </div>
-          </div> */}
-
-
+    
           {/* numbers */}
-      
+    <div className="number-box">
+          <label htmlFor='Number' className='placeholder-new'>
+          Number - required
+        </label>
       {contactData.mobileNumbers.map((number, index) => (
-          <div className='input-container ic2'>
             <div className="same-row">            
             <input
-          className='input'
+          className='input-new'
           type='number'
-          placeholder=' '
+          placeholder='Number'
           value={number}
           required
           onChange={(e) => {
@@ -207,32 +179,31 @@ const AddC = ({show, handleClose, onSaveContact}) => {
             setContactData({ ...contactData, mobileNumbers: updatedNumbers });
           }}
         />
-        <div className='cut'></div>
-        <label htmlFor='number' className='placeholder'>
-          Number
-        </label>
         <button
           type='button'
-          className='remove-button'
+          className='cancel-btn'
           onClick={() => handleRemovePhoneNumber(index)}
           disabled={index === 0}
         >
-          -
+          Remove
         </button>
         </div>
-          </div>
         ))}
-        <button type='button' className='add-button' onClick={handleAddPhoneNumber}>
-        <i class="fa-solid fa-plus"></i>
+        <button type='button' className='cancel-btn' onClick={handleAddPhoneNumber}>
+        Add
       </button>
+        </div>
 
+<div className="number-box">
+      <label htmlFor='emails' className='placeholder-new'>
+          Email - required
+        </label>
   {contactData.emails.map((email, index) => (
-    <div className='input-container ic2'>
     <div className="same-row">  
     <input
-          className='input'
+          className='input-new'
           type='text'
-          placeholder=' '
+          placeholder='Email'
           value={email}
           required
           onChange={(e) => {
@@ -244,26 +215,26 @@ const AddC = ({show, handleClose, onSaveContact}) => {
             });
           }}
         />
-         <div className='cut'></div>
-        <label htmlFor='emails' className='placeholder'>
-          Email
-        </label>
+        
         <button
           type='button'
-          className='remove-button'
+          className='cancel-btn'
           onClick={() => handleRemoveEmails(index)}
           disabled={index === 0}
         >
-          -
+          Remove
         </button>
     </div>
-    </div>
        ))}
-     <button type='button' className='add-button' onClick={handleAddEmails}>
-     <i className="fa-solid fa-plus"></i>
+     <button type='button' className='cancel-btn' onClick={handleAddEmails}>
+     Add
   </button>
-      <button type="text" className="submit">submit</button>
-
+  </div>
+  </div>
+  <div className="cancel-add-btns">
+      <button type="text" className="delete-btn">Create</button>
+    <button className="cancel-btn" onClick={handleClose}>Cancel</button>
+  </div>
     </form>
     </div>
   </div>
